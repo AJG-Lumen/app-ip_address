@@ -12,13 +12,11 @@ const IPCIDR = require('ip-cidr');
  *                 in CIDR format.
  * @param {callback} callback - A callback function.
  * @return {string} (firstIpAddress) - An IPv4 address.
- * @return {string} (returnIpv6Address) - An IPv6 address.
  */
 function getFirstIpAddress(cidrStr, callback) {
 
   // Initialize return arguments for callback
   let firstIpAddress = null;
-  let returnIpv6Address = null;
   let callbackError = null;
 
   // Instantiate an object from the imported class and assign the instance to variable cidr.
@@ -44,11 +42,7 @@ function getFirstIpAddress(cidrStr, callback) {
   // Node.js convention is to pass error data as the first argument to a callback.
   // The IAP convention is to pass returned data as the first argument and error
   // data as the second argument to the callback function.
-  if (firstIpAddress !== null) {
-    returnIpv6Address = getIpv4MappedIpv6Address(firstIpAddress);
-    }
-  let returnData = ["ipv4:" + firstIpAddress, "ipv6:" + returnIpv6Address]
-  return callback(returnData, callbackError);
+  return callback(firstIpAddress, callbackError);
 }
 
 /**
@@ -123,7 +117,7 @@ function main() {
       if (error) {
         console.error(`  Error returned from GET request: ${error}`);
       }
-      console.log(`  Response returned from GET request: ${data[0]},${data[1]}`);
+      console.log(`  Response returned from GET request: ${data}`);
     });
   }
   // Iterate over sampleIpv4s and pass the element's value to getIpv4MappedIpv6Address().
